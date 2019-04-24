@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Pogoda</string>
+    <string name="current_temp">%1$.2f°C</string>
+    <string name="max_temp">Today max: %1$.2f°C</string>
+    <string name="min_temp">Today min: %1$.2f°C</string>
+    <string name="humidity">Humidity: %1$d m</string>
+    <string name="pressure">Pressure: %1$d hpa</string>
+
 </resources>

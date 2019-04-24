@@ -18,10 +18,10 @@ import org.kodein.di.generic.instance
 import pl.wojtek.koziol.pogoda.R
 import pl.wojtek.koziol.pogoda.ui.base.ScopedFragment
 
-class ForecastFragment : ScopedFragment(),KodeinAware {
+class ForecastFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
 
-    private val viewModelFactory:ForecastViewModelFactory by instance()
+    private val viewModelFactory: ForecastViewModelFactory by instance()
     private lateinit var viewModel: ForecastViewModel
 
     override fun onCreateView(
@@ -33,23 +33,30 @@ class ForecastFragment : ScopedFragment(),KodeinAware {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this,viewModelFactory).get(ForecastViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ForecastViewModel::class.java)
         // TODO: Use the ViewModel
         arguments?.let {
             val safeArgs = ForecastFragmentArgs.fromBundle(it)
 //            safeArgs.cityName
             launch {
+                city.text = safeArgs.cityName
                 setupForecat(safeArgs.cityName)
             }
         }
     }
 
-    private suspend fun setupForecat(city:String){
+    private suspend fun setupForecat(city: String) {
         viewModel.getWeather(city).value.await().observe(this, Observer {
-//            Log.d("aaaaaaaaaaaaa",it.toString())
-            if (it==null)
+            //            Log.d("aaaaaaaaaaaaa",it.toString())
+            if (it == null)
                 return@Observer
-            textView.text = it.toString()
+            group_loading.visibility = View.GONE
+            temp.text = getString(R.string.current_temp, it.temp)
+            temp_max.text = getString(R.string.max_temp, it.tempMax)
+            temp_min.text = getString(R.string.min_temp, it.tempMin)
+            humidity.text = getString(R.string.humidity, it.humidity)
+            pressure.text = getString(R.string.pressure, it.pressure)
+//            Log.d("aaaaaaaaaaaaa",it.toString())
         }
         )
     }
